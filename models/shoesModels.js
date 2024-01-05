@@ -21,6 +21,15 @@ const shoesProductScheme = mongoose.Schema(
             required: false,
             default: 'https://uxwing.com/wp-content/themes/uxwing/download/logistics-shipping-delivery/search-product-icon.png'
         },
+        review: {
+            type: Number,
+            require: false,
+            default: 0
+        },
+        description: {
+            type: String,
+            required: true,
+        }
 
     },
     {
