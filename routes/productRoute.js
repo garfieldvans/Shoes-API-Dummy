@@ -3,6 +3,8 @@ const Product = require("../models/shoesModels");
 const routes = express.Router()
 
 routes.use(express.urlencoded({extended: false}));
+const cors = require('cors')
+routes.use(cors())
 // create new product
 routes.post("/new", async (req, res) => {
   try {
