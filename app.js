@@ -5,7 +5,7 @@ const router = require("./routes/router");
 const app = express();
 const mongoose = require("mongoose");
 
-const DATABASE = process.env.DATABASE_URL;
+const DATABASE = "mongodb+srv://boodat:boodat@cluster0.ur7fh0c.mongodb.net/shoes-API?retryWrites=true&w=majority";
 app.use(express.json());
 
 //connection to db
