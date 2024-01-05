@@ -1,21 +1,26 @@
 require("dotenv").config();
 
+const PORT = process.env.PORT
+const DATABASE = process.env.DATABASE_URL
+
 const express = require("express");
+const cors = require('cors')
 const app = express();
 const mongoose = require("mongoose");
 const Product = require("./models/shoesModels");
 
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({extended: false}));
 
 
 //connection to db
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(process.env.DATABASE_URL)
+  .connect(DATABASE)
   .then(() => {
     console.log("connected to db");
-    app.listen(4000, () => console.log("server running"));
+    app.listen(PORT || 4001, () => console.log("server running"));
   })
   .catch((error) => {
     console.log(error);
