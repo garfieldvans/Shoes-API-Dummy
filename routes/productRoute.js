@@ -2,6 +2,7 @@ const express = require("express");
 const Product = require("../models/shoesModels");
 const routes = express.Router()
 
+routes.use(express.urlencoded({extended: false}));
 // create new product
 routes.post("/new", async (req, res) => {
   try {
