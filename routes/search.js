@@ -11,7 +11,7 @@ searchroutes.get("/q", async (req, res) => {
         const query = req.query.query;
     
         const page = parseInt(req.query.page) || 1;
-        const pageSize = parseInt(req.query.pageSize) || 10;
+        const pageSize = parseInt(req.query.pageSize) || 20;
     
         const startIndex = (page - 1) * pageSize;
     
