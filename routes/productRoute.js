@@ -74,5 +74,40 @@ routes.delete("/:id", async (req, res) => {
   }
 });
 
+// Get products sorted by category
+routes.get('/sorted-by-category', async (req, res) => {
+  try {
+    const productsByCategory = await Product.find().sort({ category: 1 }); // Sorting in ascending order by category
+    res.json(productsByCategory);
+  } catch (error) {
+    console.error('Error fetching products sorted by category:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+routes.get('/search', async (req, res) => {
+  
+  try {
+    const query = req.query.name;
+    // if (!productName) {
+    //   return res.status(400).json({ message: 'Please provide a search term' });
+    // }
+
+    // Use findOne with $regex for case-insensitive search by name
+    // const product = await Product.find({ name: { $regex: new RegExp(productName, 'i') } });
+
+    // if (!product) {
+    //   return res.status(404).json({ message: `Product with name ${productName} not found` });
+    // }
+
+    res.send({query});
+    console.log(query);
+  } catch (error) {
+    console.error('Error fetching product by name:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 module.exports = routes
