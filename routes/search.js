@@ -57,4 +57,42 @@ searchroutes.get("/q", async (req, res) => {
   }
 });
 
+
+searchroutes.get("/filter", async (req, res) => {
+  try {
+    const gender = req.query.gender || "";
+    const category = req.query.category || "";
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 20;
+    const startIndex = (page - 1) * pageSize;
+
+    let filterCriteria = {};
+
+    if (gender && category) {
+      // Both gender and category provided
+      filterCriteria = {
+        'filters.gender': { $regex: new RegExp(gender, 'i') },
+        'filters.category': { $regex: new RegExp(category, 'i') }
+      };
+    } else if (gender) {
+      // Only gender provided
+      filterCriteria = {
+        'filters.gender': { $regex: new RegExp(gender, 'i') }
+      };
+    } else if (category) {
+      // Only category provided
+      filterCriteria = {
+        'filters.category': { $regex: new RegExp(category, 'i') }
+      };
+    }
+
+    // Use MongoDB $regex operator for case-insensitive search
+    const results = await Product.find(filterCriteria).skip(startIndex).limit(pageSize);
+
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = searchroutes;

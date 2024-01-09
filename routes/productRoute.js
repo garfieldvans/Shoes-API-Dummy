@@ -26,6 +26,17 @@ routes.get("/", async (req, res) => {
   }
 });
 
+routes.get("/newest", async (req, res) => {
+  try {
+    // Use MongoDB sort and limit to get the newest added product
+    const newestProduct = await Product.findOne().sort({ createdAt: -1 }).limit(1);
+
+    res.json(newestProduct);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // get a product by id
 routes.get("/:id", async (req, res) => {
   try {
@@ -75,7 +86,7 @@ routes.delete("/:id", async (req, res) => {
 });
 
 // Get products sorted by category
-routes.get('/sorted-by-category', async (req, res) => {
+routes.get('/category?', async (req, res) => {
   try {
     const productsByCategory = await Product.find().sort({ category: 1 }); // Sorting in ascending order by category
     res.json(productsByCategory);
@@ -85,29 +96,31 @@ routes.get('/sorted-by-category', async (req, res) => {
   }
 });
 
-
-routes.get('/search', async (req, res) => {
-  
+routes.get('/filters', async (req, res) => {
   try {
-    const query = req.query.name;
-    // if (!productName) {
-    //   return res.status(400).json({ message: 'Please provide a search term' });
-    // }
+    // Extract filter parameters from the query string
+    const { gender, category } = req.query;
 
-    // Use findOne with $regex for case-insensitive search by name
-    // const product = await Product.find({ name: { $regex: new RegExp(productName, 'i') } });
+    // Construct the filter criteria
+    const filterCriteria = {};
 
-    // if (!product) {
-    //   return res.status(404).json({ message: `Product with name ${productName} not found` });
-    // }
+    if (gender) {
+      filterCriteria["filters.gender"] = gender;
+    }
 
-    res.send({query});
-    console.log(query);
+    if (category) {
+      filterCriteria["filters.category"] = category;
+    }
+
+    // Find products that match the filter criteria
+    const products = await Product.find(filterCriteria);
+
+    // Send the products as a JSON response
+    res.json(products);
   } catch (error) {
-    console.error('Error fetching product by name:', error);
+    console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 module.exports = routes
